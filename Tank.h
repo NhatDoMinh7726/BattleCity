@@ -29,6 +29,9 @@ public:
 		this->dirX = dx;
 		this->dirY = dy;
 		SDL_Rect newRect = { newX , newY , tile_size , tile_size };
+		if (newX < tile_size || newX > width - tile_size * 2 || newY < tile_size || newY > height - tile_size * 2) {
+			return; // Ngăn di chuyển ra ngoài màn hình
+		}
 		for (int i = 0; i < walls.size(); i++)
 		{
 			if (walls[i].active && SDL_HasIntersection(&newRect, &walls[i].rect)) {

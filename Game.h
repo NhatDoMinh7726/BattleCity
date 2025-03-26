@@ -7,7 +7,9 @@
 #include "Tank.h"
 #include "Bullet.h"
 #include "EnemyTank.h"
+#include "SDL_mixer.h"
 using namespace std;
+enum GameState { GAME_MENU, GAME_RUNNING, GAME_PAUSED, GAME_OVER };
 class Game {
 public:
 	Game(); 
@@ -17,7 +19,8 @@ public:
 	void update();
 	void render();
 	void clean();
-
+	void renderMenu();
+	void handleMenuEvents(SDL_Event& event);
 	bool running() {
 		return isRunning;
 	}	
@@ -36,7 +39,7 @@ public:
 	Tank player; 
 	int enemyNumber = 3;
 	vector<EnemyTank> enemies;
-	void spawnEnemies() {
+	/*void spawnEnemies() {
 		enemies.clear();
 		for (int i = 0; i < enemyNumber; ++i)
 		{
@@ -58,15 +61,35 @@ public:
 			}
 			enemies.push_back(EnemyTank(ex, ey));
 		}
-	}
+	}*/
 
+	void spawnEnemies() {
+		enemies.clear();
+		for (int i = 0; i < enemyNumber; ++i) {
+			int ex, ey;
+			bool validPosition = false;
+			while (!validPosition) {
+				ex = (rand() % (map_width - 4) + 2) * tile_size; // Thu hẹp phạm vi: từ 2 đến 16 (80 đến 640)
+				ey = (rand() % (map_height - 4) + 2) * tile_size; // Thu hẹp phạm vi: từ 2 đến 11 (80 đến 440)
+				validPosition = true;
+				for (const auto& wall : walls) {
+					if (wall.active && wall.x == ex && wall.y == ey) {
+						validPosition = false;
+						break;
+					}
+				}
+			}
+			enemies.push_back(EnemyTank(ex, ey));
+		}
+	}
+	GameState getGameState() { return gameState; } // ✅ Thêm hàm getter
 	bool isMenu = true;
 	void showMenu();
 private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-
-
+	GameState gameState;
+	Mix_Music* backgroundMusic;
 
 };

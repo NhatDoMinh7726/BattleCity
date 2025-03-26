@@ -1,8 +1,9 @@
 ﻿#include "Game.h"
 #include "Wall.h"
 #include "Tank.h"
+#include "TextureManager.h"
 using namespace std; 
-Game::Game() : window(nullptr), renderer(nullptr), isRunning(false), isMenu(true) {}  // dấu hai chấm : là toán tử phạm vi dùng để xác định hàm Game() thuộc lớp Game.
+Game::Game() : window(nullptr), renderer(nullptr), isRunning(false), isMenu(true) , backgroundMusic(nullptr) {}  // dấu hai chấm : là toán tử phạm vi dùng để xác định hàm Game() thuộc lớp Game.
 Game::~Game(){} // đây là hàm hủy , ~ là toán tử hủy , dùng để giải phóng tài nguyên , tránh rò rỉ bộ nhớ.
 // ta có thể hình dùng Game::init() và Game::update() nghĩa là hàm init() và update() của Game.\
 
@@ -34,11 +35,55 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else {
 		isRunning = false; 
 	}
+	
 	generateWalls();
 	player = Tank(6 * tile_size, 6 * tile_size);
 	spawnEnemies();
+	TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/menubackground.jpg", "menu_bg", renderer);
+	TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/buttonplay.png", "button_play", renderer);
+	if (!TextureManager::Instance()->getTexture("menu_bg") || !TextureManager::Instance()->getTexture("button_play")) {
+		cout << "Failed to load menu assets!" << endl;
+		isRunning = false;
+	}	
 
+	// Khởi tạo SDL_mixer
+	if (Mix_Init(MIX_INIT_OGG | MIX_INIT_WAV) != (MIX_INIT_OGG | MIX_INIT_WAV)) {
+		cout << "Failed to initialize SDL_mixer: " << Mix_GetError() << endl;
+	}
+	else {
+		cout << "SDL_mixer initialized successfully!" << endl;
+	}
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		cout << "Failed to open audio: " << Mix_GetError() << endl;
+	}
+	else {
+		cout << "Audio opened successfully!" << endl;
+	}
 
+	// Tải nhạc nền (file WAV)
+	backgroundMusic = Mix_LoadMUS("D:/VISUAL STUDIO/BTLgame/Assets/background_music.wav");
+	if (!backgroundMusic) {
+		cout << "Failed to load background music: " << Mix_GetError() << endl;
+		// Kiểm tra xem file có tồn tại không
+		FILE* file = fopen("D:/VISUAL STUDIO/BTLgame/Assets/background_music2.wav", "rb");
+		if (!file) {
+			cout << "File background_music2.wav does not exist or cannot be accessed!" << endl;
+		}
+		else {
+			fclose(file);
+			cout << "File background_music2.wav exists, but SDL_mixer failed to load it!" << endl;
+		}
+	}
+	else {
+		cout << "Background music loaded successfully!" << endl;
+		// Chỉ phát nhạc nếu tải thành công
+		if (Mix_PlayMusic(backgroundMusic, -1) == -1) {
+			cout << "Failed to play background music: " << Mix_GetError() << endl;
+		}
+		else {
+			cout << "Background music playing!" << endl;
+		}
+	}
 
 }
 void Game::handleEvents()
@@ -66,7 +111,7 @@ void Game::update(){
 	player.updateBullets();
 	for (auto& enemy : enemies)
 	{
-		enemy.move(walls);
+		enemy.move(walls , player.x , player.y);
 		enemy.updateBullets();
 		// Giới hạn số lượng đạn trên màn hình
 		if (enemy.bullets.size() < 3 && rand() % 100 < 2) {
@@ -149,6 +194,11 @@ void Game::render()
 }
 void Game::clean()
 {
+	// Giải phóng nhạc nền
+	Mix_FreeMusic(backgroundMusic);
+	Mix_CloseAudio();
+	Mix_Quit();
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
@@ -164,23 +214,61 @@ void Game::showMenu() {
 				isRunning = false;
 				return;
 			}
-			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				int x = event.button.x, y = event.button.y;
-				if (x >= 300 && x <= 500 && y >= 200 && y <= 250) { // Nút Start Game
-					menuRunning = false;
-					isMenu = false;
-				}
-			}
+			handleMenuEvents(event); // GỌI XỬ LÝ SỰ KIỆN MENU
+
+			if (!isRunning) return; // Nếu chọn Quit thì thoát game ngay
+			if (!isMenu) menuRunning = false; // Nếu chọn Play thì thoát menu
 		}
 
-		SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-		SDL_RenderClear(renderer);
-
-		SDL_Rect startButton = { 300, 200, 200, 50 };
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-		SDL_RenderFillRect(renderer, &startButton);
-
-		SDL_RenderPresent(renderer);
+		renderMenu(); // Cập nhật hiển thị menu
 	}
 }
+//void Game::renderMenu() {
+//	// Hiển thị background
+//	TextureManager::Instance()->draw("menu_bg", 0, 0, width, height, renderer);
+//
+//	//// Hiển thị nút Play
+//	//TextureManager::Instance()->draw("button_play", 300, 250, 128, 64, renderer);
+//
+//	//// Hiển thị nút Quit
+//	//TextureManager::Instance()->draw("button_quit", 300, 350, 128, 64, renderer);
+//
+//	//SDL_RenderPresent(renderer);
+//	// Hiển thị button PLAY
+//	
+//
+//}
 
+void Game::renderMenu() {
+	SDL_RenderClear(renderer);
+
+	// Hiển thị background
+	TextureManager::Instance()->draw("menu_bg", 0, 0, width, height, renderer);
+
+	// Hiển thị button PLAY (kích thước thực: 213x42)
+	SDL_Rect srcRectPlay = { 0, 0, 213, 42 };  // Kích thước thực của button_play.png
+	SDL_Rect destRectPlay = { (width - 213) / 2, 250, 213, 42 };  // Căn giữa theo chiều ngang
+
+	TextureManager::Instance()->draw("button_play",
+		srcRectPlay.x, srcRectPlay.y, srcRectPlay.w, srcRectPlay.h,
+		destRectPlay.x, destRectPlay.y, destRectPlay.w, destRectPlay.h,
+		renderer);
+
+	SDL_RenderPresent(renderer);
+}
+void Game::handleMenuEvents(SDL_Event& event) {
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		int mouseX = event.button.x;
+		int mouseY = event.button.y;
+
+		// Kích thước vùng click khớp với kích thước hiển thị của button Play
+		SDL_Rect playButtonDest = { (width - 213) / 2, 250, 213, 42 };  // Căn giữa theo chiều ngang
+
+		if (mouseX >= playButtonDest.x && mouseX <= playButtonDest.x + playButtonDest.w &&
+			mouseY >= playButtonDest.y && mouseY <= playButtonDest.y + playButtonDest.h) {
+			// Chuyển trạng thái game sang GAME_RUNNING
+			isMenu = false;
+			gameState = GAME_RUNNING;
+		}
+	}
+}
