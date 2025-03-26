@@ -1,12 +1,181 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\VISUAL STUDIO\\BTLgame\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Wall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Wall.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\EnemyTank.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:EnemyTank.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\EnemyTank.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:EnemyTank.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Tank.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Tank.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Bullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Bullet.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\BattleCIty.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:BattleCIty.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Wall.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Wall.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|D:\\VISUAL STUDIO\\BTLgame\\Kichthuoc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2C508D7E-E71F-45AD-8D7E-11A1403F6417}|BTLgame.vcxproj|solutionrelative:Kichthuoc.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Wall.cpp",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Wall.cpp",
+              "RelativeDocumentMoniker": "Wall.cpp",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Wall.cpp",
+              "RelativeToolTip": "Wall.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-25T08:26:02.067Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Game.h",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Game.h",
+              "RelativeDocumentMoniker": "Game.h",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Game.h",
+              "RelativeToolTip": "Game.h",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAgwEAAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-24T21:17:51.881Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EnemyTank.cpp",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\EnemyTank.cpp",
+              "RelativeDocumentMoniker": "EnemyTank.cpp",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\EnemyTank.cpp",
+              "RelativeToolTip": "EnemyTank.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-25T17:12:19.021Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EnemyTank.h",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\EnemyTank.h",
+              "RelativeDocumentMoniker": "EnemyTank.h",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\EnemyTank.h",
+              "RelativeToolTip": "EnemyTank.h",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAgwFkAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-25T17:07:37.384Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Bullet.h",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Bullet.h",
+              "RelativeDocumentMoniker": "Bullet.h",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Bullet.h",
+              "RelativeToolTip": "Bullet.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-25T16:46:12.126Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Tank.h",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Tank.h",
+              "RelativeDocumentMoniker": "Tank.h",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Tank.h",
+              "RelativeToolTip": "Tank.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-25T08:57:58.77Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Game.cpp",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Game.cpp",
+              "RelativeDocumentMoniker": "Game.cpp",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Game.cpp",
+              "RelativeToolTip": "Game.cpp",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAAAA8AAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-24T21:39:52.606Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Kichthuoc.h",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Kichthuoc.h",
+              "RelativeDocumentMoniker": "Kichthuoc.h",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Kichthuoc.h",
+              "RelativeToolTip": "Kichthuoc.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-25T08:51:00.488Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Wall.h",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\Wall.h",
+              "RelativeDocumentMoniker": "Wall.h",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\Wall.h",
+              "RelativeToolTip": "Wall.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-03-25T08:25:56.71Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BattleCIty.cpp",
+              "DocumentMoniker": "D:\\VISUAL STUDIO\\BTLgame\\BattleCIty.cpp",
+              "RelativeDocumentMoniker": "BattleCIty.cpp",
+              "ToolTip": "D:\\VISUAL STUDIO\\BTLgame\\BattleCIty.cpp",
+              "RelativeToolTip": "BattleCIty.cpp",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAAAwAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-03-24T20:57:19.231Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
