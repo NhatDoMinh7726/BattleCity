@@ -2,9 +2,9 @@
 #include "Wall.h"
 #include "Tank.h"
 #include "TextureManager.h"
-using namespace std; 
-Game::Game() : window(nullptr), renderer(nullptr), isRunning(false), isMenu(true) , backgroundMusic(nullptr) {}  // dấu hai chấm : là toán tử phạm vi dùng để xác định hàm Game() thuộc lớp Game.
-Game::~Game(){} // đây là hàm hủy , ~ là toán tử hủy , dùng để giải phóng tài nguyên , tránh rò rỉ bộ nhớ.
+using namespace std;
+Game::Game() : window(nullptr), renderer(nullptr), isRunning(false), isMenu(true), backgroundMusic(nullptr) {}  // dấu hai chấm : là toán tử phạm vi dùng để xác định hàm Game() thuộc lớp Game.
+Game::~Game() {} // đây là hàm hủy , ~ là toán tử hủy , dùng để giải phóng tài nguyên , tránh rò rỉ bộ nhớ.
 // ta có thể hình dùng Game::init() và Game::update() nghĩa là hàm init() và update() của Game.\
 
 
@@ -19,60 +19,44 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		cout << "Subsystems initialized!..." << endl;
-		window = SDL_CreateWindow(title, xpos, ypos, width, height , flags);
+		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		if (window)
 		{
 			cout << "Window created!" << endl;
 		}
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer)
-		{	
+		{
 			SDL_RenderPresent(renderer);
 			cout << "Renderer created!" << endl;
 		}
 		isRunning = true;
 	}
 	else {
-		isRunning = false; 
+		isRunning = false;
 	}
-	
+
 	generateWalls();
-	player = Tank(6 * tile_size, 6 * tile_size);
+	player = Tank(6 * tile_size, 6 * tile_size, renderer);
+
 	spawnEnemies();
 	TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/menubackground.jpg", "menu_bg", renderer);
 	TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/buttonplay.png", "button_play", renderer);
 	if (!TextureManager::Instance()->getTexture("menu_bg") || !TextureManager::Instance()->getTexture("button_play")) {
 		cout << "Failed to load menu assets!" << endl;
 		isRunning = false;
-	}	
+	}
 
-	// Khởi tạo SDL_mixer
-	if (Mix_Init(MIX_INIT_OGG | MIX_INIT_WAV) != (MIX_INIT_OGG | MIX_INIT_WAV)) {
-		cout << "Failed to initialize SDL_mixer: " << Mix_GetError() << endl;
-	}
-	else {
-		cout << "SDL_mixer initialized successfully!" << endl;
-	}
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-		cout << "Failed to open audio: " << Mix_GetError() << endl;
-	}
-	else {
-		cout << "Audio opened successfully!" << endl;
+		cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << endl;
+		isRunning = false;
+		return;
 	}
 
-	// Tải nhạc nền (file WAV)
-	backgroundMusic = Mix_LoadMUS("D:/VISUAL STUDIO/BTLgame/Assets/background_music.wav");
+	backgroundMusic = Mix_LoadMUS("D:/VISUAL STUDIO/BTLgame/Assets/backgroundMusic.wav");
 	if (!backgroundMusic) {
-		cout << "Failed to load background music: " << Mix_GetError() << endl;
-		// Kiểm tra xem file có tồn tại không
-		FILE* file = fopen("D:/VISUAL STUDIO/BTLgame/Assets/background_music2.wav", "rb");
-		if (!file) {
-			cout << "File background_music2.wav does not exist or cannot be accessed!" << endl;
-		}
-		else {
-			fclose(file);
-			cout << "File background_music2.wav exists, but SDL_mixer failed to load it!" << endl;
-		}
+		cout << "Failed to load background music! SDL_mixer Error: " << Mix_GetError() << endl;
+		isRunning = false;
 	}
 	else {
 		cout << "Background music loaded successfully!" << endl;
@@ -87,7 +71,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 }
 void Game::handleEvents()
-{	
+{
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -107,17 +91,17 @@ void Game::handleEvents()
 		}
 	}
 }
-void Game::update(){
+void Game::update() {
 	player.updateBullets();
 	for (auto& enemy : enemies)
 	{
-		enemy.move(walls , player.x , player.y);
+		enemy.move(walls, player.x, player.y);
 		enemy.updateBullets();
 		// Giới hạn số lượng đạn trên màn hình
 		if (enemy.bullets.size() < 3 && rand() % 100 < 2) {
-				enemy.shoot();
+			enemy.shoot();
 		}
-		
+
 	}
 	for (auto& wall : walls)
 	{
@@ -164,7 +148,7 @@ void Game::update(){
 		{
 			if (SDL_HasIntersection(&bullet.rect, &player.rect)) {
 				isRunning = false;
-				return;	
+				return;
 			}
 		}
 	}
@@ -177,7 +161,7 @@ void Game::render()
 
 	// Vẽ phần nền bên trong (màu đen)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_Rect gameArea = { tile_size, tile_size, width - 2 * tile_size, height - 2 * tile_size};
+	SDL_Rect gameArea = { tile_size, tile_size, width - 2 * tile_size, height - 2 * tile_size };
 	SDL_RenderFillRect(renderer, &gameArea);
 	for (int i = 0; i < walls.size(); i++)
 	{
@@ -185,7 +169,9 @@ void Game::render()
 	}
 
 	player.render(renderer);
-
+	for (auto& bullet : player.bullets) {
+		bullet.render(renderer);
+	}
 	for (auto& enemy : enemies)
 	{
 		enemy.render(renderer);
@@ -272,3 +258,16 @@ void Game::handleMenuEvents(SDL_Event& event) {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

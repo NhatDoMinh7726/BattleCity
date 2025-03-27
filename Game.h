@@ -12,7 +12,7 @@ using namespace std;
 enum GameState { GAME_MENU, GAME_RUNNING, GAME_PAUSED, GAME_OVER };
 class Game {
 public:
-	Game(); 
+	Game();
 	~Game();
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 	void handleEvents();
@@ -23,8 +23,8 @@ public:
 	void handleMenuEvents(SDL_Event& event);
 	bool running() {
 		return isRunning;
-	}	
-	vector<Wall> walls; 
+	}
+	vector<Wall> walls;
 	void generateWalls()
 	{
 		for (int i = 3; i < map_height - 3; i += 2)
@@ -36,7 +36,7 @@ public:
 			}
 		}
 	}
-	Tank player; 
+	Tank player = Tank(6 * tile_size, 6 * tile_size, renderer);
 	int enemyNumber = 3;
 	vector<EnemyTank> enemies;
 	/*void spawnEnemies() {
@@ -93,3 +93,10 @@ private:
 	Mix_Music* backgroundMusic;
 
 };
+
+
+
+
+
+
+

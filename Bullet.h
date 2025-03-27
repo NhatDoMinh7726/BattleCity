@@ -1,3 +1,4 @@
+
 #pragma once
 #include"SDL.h"
 #include"Kichthuoc.h"
@@ -37,3 +38,31 @@ public:
 	}
 };
 
+
+//#pragma once
+//#include "SDL.h"
+//#include "Kichthuoc.h"
+//
+//class Bullet {
+//public:
+//    Bullet(int x, int y, int dx, int dy) : dirX(dx), dirY(dy), active(true) {
+//        rect = { x, y, 10, 10 };
+//    }
+//
+//    void move() {
+//        rect.x += dirX;
+//        rect.y += dirY;
+//        if (rect.x < 0 || rect.x > width || rect.y < 0 || rect.y > height) {
+//            active = false;
+//        }
+//    }
+//
+//    void render(SDL_Renderer* renderer) const {
+//        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//        SDL_RenderFillRect(renderer, &rect);
+//    }
+//
+//    SDL_Rect rect;
+//    int dirX, dirY;
+//    bool active;
+//};

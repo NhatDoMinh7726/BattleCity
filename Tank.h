@@ -1,10 +1,100 @@
-﻿#pragma once
+﻿//#pragma once
+//#include "Wall.h"
+//#include "SDL.h"
+//#include <vector>
+//#include "Kichthuoc.h"
+//#include "Bullet.h"
+//#include <algorithm>
+//#include "SDL_image.h"
+//using namespace std;
+//
+//class Tank
+//{
+//public:
+//	Tank() : x(0), y(0), dirX(0), dirY(-1), rect{ 0, 0, tile_size, tile_size } {}
+//	~Tank() {};
+//	int x, y;
+//	int dirX, dirY;
+//	SDL_Rect rect;
+//	Tank(int startX, int startY)
+//	{
+//		x = startX;
+//		y = startY;
+//		rect = { x , y , tile_size , tile_size };
+//		dirX = 0;
+//		dirY = -1;
+//	}
+//	void move(int dx, int dy, const vector<Wall>& walls) {
+//		int newX = x + dx;
+//		int newY = y + dy;
+//		this->dirX = dx;
+//		this->dirY = dy;
+//		SDL_Rect newRect = { newX , newY , tile_size , tile_size };
+//		if (newX < tile_size || newX > width - tile_size * 2 || newY < tile_size || newY > height - tile_size * 2) {
+//			return; // Ngăn di chuyển ra ngoài màn hình
+//		}
+//		for (int i = 0; i < walls.size(); i++)
+//		{
+//			if (walls[i].active && SDL_HasIntersection(&newRect, &walls[i].rect)) {
+//				return; // Ngăn việc di chuyển nếu chạm vào tường 
+//			}
+//		}
+//		if (newX >= tile_size && newY <= width - tile_size * 2 && newY >= tile_size && newY <= height - tile_size * 2)
+//		{
+//			x = newX;
+//			y = newY;
+//			rect.x = x;
+//			rect.y = y;
+//		}
+//
+//	}
+//	vector<Bullet> bullets;
+//	void shoot() {
+//		bullets.push_back(Bullet(x + tile_size / 2 - 5, y + tile_size / 2 - 5, this->dirX, this->dirY));
+//	}
+//	void updateBullets() {
+//		for (auto& bullet : bullets)
+//		{
+//			bullet.move();
+//		}
+//		bullets.erase(remove_if(bullets.begin(), bullets.end(), [](Bullet& b) {return !b.active; }), bullets.end());
+//
+//	}
+//	void render(SDL_Renderer* renderer)
+//	{
+//		SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+//		SDL_RenderFillRect(renderer, &rect);
+//		for (auto& bullet : bullets)
+//		{
+//			bullet.render(renderer);
+//		}
+//	}
+//	SDL_Texture* loadTexture(const std::string& path, SDL_Renderer* renderer) {
+//		SDL_Surface* surface = IMG_Load(path.c_str());
+//		if (!surface) {
+//			std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
+//			return nullptr;
+//		}
+//		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+//		SDL_FreeSurface(surface);
+//		return texture;
+//	}
+//};
+//
+//
+//
+//
+//
+//
+
+#pragma once
 #include "Wall.h"
 #include "SDL.h"
 #include <vector>
 #include "Kichthuoc.h"
 #include "Bullet.h"
 #include <algorithm>
+#include "SDL_image.h"
 using namespace std;
 
 class Tank
@@ -13,15 +103,17 @@ public:
 	Tank() : x(0), y(0), dirX(0), dirY(-1), rect{ 0, 0, tile_size, tile_size } {}
 	~Tank() {};
 	int x, y;
+	SDL_Texture* tankTexture = nullptr;
 	int dirX, dirY;
 	SDL_Rect rect;
-	Tank(int startX, int startY)
-	{
+	Tank(int startX, int startY, SDL_Renderer* renderer) {
 		x = startX;
 		y = startY;
-		rect = { x , y , tile_size , tile_size };
-		dirX = 0;
-		dirY = -1;
+		rect = { x, y, tile_size, tile_size };
+		direction = 0; // Mặc định hướng lên
+		tankTexture = loadTexture("D:/VISUAL STUDIO/BTLgame/Assets/spritesheet.png", renderer);
+
+		srcRect = { 0, 0, 64, 64 }; // Mặc định cắt hình xe tăng hướng lên
 	}
 	void move(int dx, int dy, const vector<Wall>& walls) {
 		int newX = x + dx;
@@ -59,14 +151,75 @@ public:
 		bullets.erase(remove_if(bullets.begin(), bullets.end(), [](Bullet& b) {return !b.active; }), bullets.end());
 
 	}
-	void render(SDL_Renderer* renderer)
-	{
-		SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-		SDL_RenderFillRect(renderer, &rect);
-		for (auto& bullet : bullets)
-		{
-			bullet.render(renderer);
+	void render(SDL_Renderer* renderer) {
+		if (tankTexture) {
+			SDL_RenderCopy(renderer, tankTexture, &srcRect, &rect);
+		}
+		else {
+			SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+			SDL_RenderFillRect(renderer, &rect);
 		}
 	}
+	SDL_Texture* loadTexture(const std::string& path, SDL_Renderer* renderer) {
+		SDL_Surface* surface = IMG_Load(path.c_str());
+		if (!surface) {
+			std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
+			return nullptr;
+		}
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+		SDL_FreeSurface(surface);
+		return texture;
+	}
+	void updateSprite() {
+		srcRect.y = 0; // Vì ảnh của bạn nằm trên 1 hàng
+
+		switch (direction) {
+		case 0: srcRect.x = 0; break;      // Lên
+		case 1: srcRect.x = 64; break;     // Phải
+		case 2: srcRect.x = 128; break;    // Xuống
+		case 3: srcRect.x = 192; break;    // Trái
+		}
+	}
+	void handleEvent(SDL_Event& e) {
+		if (e.type == SDL_KEYDOWN) {
+			switch (e.key.keysym.sym) {
+			case SDLK_w: direction = 0; y -= tile_size; break; // Đi lên
+			case SDLK_d: direction = 1; x += tile_size; break; // Đi phải
+			case SDLK_s: direction = 2; y += tile_size; break; // Đi xuống
+			case SDLK_a: direction = 3; x -= tile_size; break; // Đi trái
+			}
+			updateSprite(); // Cập nhật hình ảnh theo hướng
+			rect.x = x;
+			rect.y = y;
+		}
+	}
+private:
+	SDL_Rect srcRect; // Hình chữ nhật cắt từ spritesheet
+	int direction; // 0: Lên, 1: Phải, 2: Xuống, 3: Trái
+
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -57,7 +57,7 @@ public:
     //    rect.x = x;
     //    rect.y = y;
     //}
-    
+
     //void move(const vector<Wall>& walls, int playerX, int playerY) {
     //    if (--moveDelay > 0) return;
     //    moveDelay = 10;
@@ -188,3 +188,12 @@ public:
         }
     }
 };
+
+
+
+
+
+
+
+
+
