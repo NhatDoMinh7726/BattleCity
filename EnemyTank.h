@@ -158,19 +158,25 @@ public:
     SDL_Rect srcRect = { 0, 0, 0, 0 };  // Cắt ảnh từ spritesheet
     int direction = ENEMY_DOWN;
 
-    const int SPRITE_WIDTH = 194; // 779 / 4
+    const int SPRITE_WIDTH = 194; // Kích thước 1 frame trong spritesheet
     const int SPRITE_HEIGHT = 237;
+    const int SPRITES_PER_ROW = 4; // Số sprite trong một hàng
 
     EnemyTank(int startX, int startY, SDL_Renderer* renderer)
         : x(startX), y(startY), moveDelay(15), shootDelay(5),
         dirX(0), dirY(1), active(true), direction(ENEMY_DOWN) {
-        rect = { x, y, SPRITE_WIDTH, SPRITE_HEIGHT }; // Kích thước hiển thị
+
+        rect = { x, y, tile_size, tile_size }; // Kích thước hiển thị = tile_size
 
         // Load texture
         enemyTexture = loadTexture("D:/VISUAL STUDIO/BTLgame/Assets/EnemyTank.png", renderer);
 
-        // Mặc định chọn sprite hướng xuống
-        srcRect = { SPRITE_WIDTH * ENEMY_DOWN, 0, SPRITE_WIDTH, SPRITE_HEIGHT };
+        if (enemyTexture == nullptr) {
+            cout << "Failed to load EnemyTank texture!" << endl;
+        }
+
+        // Chọn sprite mặc định hướng xuống
+        updateSprite();
     }
 
     ~EnemyTank() {
@@ -238,7 +244,9 @@ public:
     }
 
     void updateSprite() {
-        srcRect = { SPRITE_WIDTH * direction, 0, SPRITE_WIDTH, SPRITE_HEIGHT };
+        if (enemyTexture) {
+            srcRect = { direction * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT };
+        }
     }
 
     void shoot() {
@@ -252,7 +260,7 @@ public:
         int bulletDirX = (dirX != 0) ? dirX : 0;
         int bulletDirY = (dirY != 0) ? dirY : 0;
 
-        bullets.push_back(Bullet(x + SPRITE_WIDTH / 2 - 5, y + SPRITE_HEIGHT / 2 - 5, bulletDirX, bulletDirY));
+        bullets.push_back(Bullet(x + tile_size / 2 - 5, y + tile_size / 2 - 5, bulletDirX, bulletDirY));
     }
 
     void updateBullets() {
@@ -262,11 +270,13 @@ public:
         bullets.erase(remove_if(bullets.begin(), bullets.end(), [](Bullet& b) { return !b.active; }), bullets.end());
     }
 
-    void render(SDL_Renderer* renderer)  {
-        SDL_Rect dstRect = { x, y, SPRITE_WIDTH, SPRITE_HEIGHT };
+    void render(SDL_Renderer* renderer) {
+        if (!enemyTexture) return; // Nếu chưa load được ảnh thì không vẽ
+
+        SDL_Rect dstRect = { x, y, tile_size, tile_size };
         SDL_RenderCopy(renderer, enemyTexture, &srcRect, &dstRect);
 
-        for (  auto& bullet : bullets) {
+        for (auto& bullet : bullets) {
             bullet.render(renderer);
         }
     }
@@ -278,11 +288,10 @@ public:
         }
         return texture;
     }
-    // Không cho phép copy
+
     EnemyTank(const EnemyTank&) = delete;
     EnemyTank& operator=(const EnemyTank&) = delete;
 
-    // Cho phép di chuyển (nếu cần)
     EnemyTank(EnemyTank&& other) noexcept {
         *this = std::move(other);
     }
@@ -300,11 +309,10 @@ public:
             direction = other.direction;
             bullets = std::move(other.bullets);
 
-            // Di chuyển ownership của texture
             enemyTexture = other.enemyTexture;
-            other.enemyTexture = nullptr; // Ngăn `SDL_DestroyTexture` phá hủy texture gốc
+            other.enemyTexture = nullptr;
         }
         return *this;
     }
-
 };
+

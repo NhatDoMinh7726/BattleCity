@@ -37,7 +37,7 @@ public:
 		}
 	}
 	Tank player = Tank(6 * tile_size, 6 * tile_size, renderer);
-	int enemyNumber = 3;
+	int enemyNumber = 5;
 	vector<EnemyTank> enemies;
 
 	void spawnEnemies() {
@@ -59,7 +59,7 @@ public:
 			enemies.push_back(EnemyTank(ex, ey,renderer));
 		}
 	}
-	GameState getGameState() { return gameState; } // ✅ Thêm hàm getter
+	GameState getGameState() { return gameState; } 
 	bool isMenu = true;
 	void showMenu();
 private:
