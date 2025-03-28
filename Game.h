@@ -56,24 +56,18 @@ public:
 					}
 				}
 			}
-			enemies.push_back(EnemyTank(ex, ey,renderer));
+			enemies.push_back(EnemyTank(ex, ey, renderer));
 		}
 	}
-	GameState getGameState() { return gameState; } 
+	GameState getGameState() { return gameState; }
 	bool isMenu = true;
 	void showMenu();
+	SDL_Texture* bulletTexture; // Thêm texture đạn
 private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	GameState gameState;
 	Mix_Music* backgroundMusic;
-
+	
 };
-
-
-
-
-
-
-

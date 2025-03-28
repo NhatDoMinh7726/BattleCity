@@ -249,19 +249,19 @@ public:
         }
     }
 
-    void shoot() {
-        if (--shootDelay > 0) return;
-        shootDelay = 5;
+    void shoot(SDL_Texture* bulletTexture) { // Truyền texture vào
+    if (--shootDelay > 0) return;
+    shootDelay = 5;
 
-        if (dirX == 0 && dirY == 0) {
-            dirX = 0; dirY = 5;
-        }
-
-        int bulletDirX = (dirX != 0) ? dirX : 0;
-        int bulletDirY = (dirY != 0) ? dirY : 0;
-
-        bullets.push_back(Bullet(x + tile_size / 2 - 5, y + tile_size / 2 - 5, bulletDirX, bulletDirY));
+    if (dirX == 0 && dirY == 0) {
+        dirX = 0; dirY = 5;
     }
+
+    int bulletDirX = (dirX != 0) ? dirX : 0;
+    int bulletDirY = (dirY != 0) ? dirY : 0;
+
+    bullets.push_back(Bullet(x, y, tile_size, dirX, dirY, bulletTexture));
+}
 
     void updateBullets() {
         for (auto& bullet : bullets) {
@@ -315,4 +315,3 @@ public:
         return *this;
     }
 };
-

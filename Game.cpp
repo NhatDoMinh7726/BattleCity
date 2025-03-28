@@ -42,6 +42,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	spawnEnemies();
 	TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/menubackground.jpg", "menu_bg", renderer);
 	TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/buttonplay.png", "button_play", renderer);
+	if (!TextureManager::Instance()->load("D:/VISUAL STUDIO/BTLgame/Assets/bullet.png", "bullet", renderer)) {
+		std::cout << "Failed to load bullet texture!" << std::endl;
+		isRunning = false;
+	}
+	bulletTexture = TextureManager::Instance()->getTexture("bullet");
 	if (!TextureManager::Instance()->getTexture("menu_bg") || !TextureManager::Instance()->getTexture("button_play")) {
 		cout << "Failed to load menu assets!" << endl;
 		isRunning = false;
@@ -86,7 +91,7 @@ void Game::handleEvents()
 			case SDLK_DOWN: player.move(0, 5, walls); break;
 			case SDLK_RIGHT: player.move(5, 0, walls); break;
 			case SDLK_LEFT: player.move(-5, 0, walls); break;
-			case SDLK_SPACE: player.shoot(); break;
+			case SDLK_SPACE: player.shoot(player.bullets, bulletTexture);; break;
 			}
 		}
 	}
@@ -99,7 +104,7 @@ void Game::update() {
 		enemy.updateBullets();
 		// Giới hạn số lượng đạn trên màn hình
 		if (enemy.bullets.size() < 3 && rand() % 100 < 2) {
-			enemy.shoot();
+			enemy.shoot(bulletTexture);
 		}
 
 	}
@@ -184,7 +189,7 @@ void Game::clean()
 	Mix_FreeMusic(backgroundMusic);
 	Mix_CloseAudio();
 	Mix_Quit();
-
+	SDL_DestroyTexture(bulletTexture);
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
@@ -258,16 +263,3 @@ void Game::handleMenuEvents(SDL_Event& event) {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -14,6 +14,8 @@ public:
 	Tank() : x(0), y(0), dirX(0), dirY(-1), rect{ 0, 0, tile_size, tile_size } {}
 	~Tank() {};
 	int x, y;
+	int directionX = 0;
+	int directionY = -1;
 	SDL_Texture* tankTexture = nullptr;
 	int dirX, dirY;
 	SDL_Rect rect;
@@ -52,21 +54,23 @@ public:
 		else if (dx < 0) direction = LEFT;
 		else if (dy > 0) direction = DOWN;
 		else if (dy < 0) direction = UP;
-
+		if (dx != 0 || dy != 0) {
+			directionX = dx;
+			directionY = dy;
+		}
 		updateSprite(); // Cập nhật hình ảnh sau khi đổi hướng
 
 	}
 	vector<Bullet> bullets;
-	void shoot() {
-		bullets.push_back(Bullet(x + tile_size / 2 - 5, y + tile_size / 2 - 5, this->dirX, this->dirY));
+	void shoot(std::vector<Bullet>& bullets, SDL_Texture* bulletTexture) {
+		bullets.push_back(Bullet(x, y, tile_size, dirX, dirY, bulletTexture));
 	}
 	void updateBullets() {
-		for (auto& bullet : bullets)
-		{
+		for (auto& bullet : bullets) {
 			bullet.move();
 		}
-		bullets.erase(remove_if(bullets.begin(), bullets.end(), [](Bullet& b) {return !b.active; }), bullets.end());
-
+		bullets.erase(remove_if(bullets.begin(), bullets.end(),
+			[](Bullet& b) { return !b.active; }), bullets.end());
 	}
 	void render(SDL_Renderer* renderer) {
 		if (tankTexture) {
@@ -131,7 +135,6 @@ private:
 	int direction; // 0: Lên, 1: Phải, 2: Xuống, 3: Trái
 
 };
-
 
 
 
