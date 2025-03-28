@@ -65,6 +65,10 @@ public:
 	bool isMenu = true;
 	void showMenu();
 	SDL_Texture* bulletTexture; // Thêm texture đạn
+	bool gameOver = false;
+	void renderGameOver(const std::string& message);
+	Uint32 gameOverTime = 0;
+	bool isWin = false;
 private:
 	bool isRunning;
 	SDL_Window* window;

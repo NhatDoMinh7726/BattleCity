@@ -104,62 +104,57 @@ void Game::handleEvents()
 }
 void Game::update() {
 	player.updateBullets();
-	for (auto& enemy : enemies)
-	{
+	for (auto& enemy : enemies) {
 		enemy.move(walls, player.x, player.y);
 		enemy.updateBullets();
-		// Giới hạn số lượng đạn trên màn hình
 		if (enemy.bullets.size() < 3 && rand() % 100 < 2) {
 			enemy.shoot(bulletTexture);
 		}
-
 	}
-	for (auto& wall : walls)
-	{
-		for (auto& bullet : player.bullets)
-		{
-			if (wall.active && SDL_HasIntersection(&bullet.rect, &wall.rect))
-			{
+
+	// Xử lý va chạm giữa đạn và tường
+	for (auto& wall : walls) {
+		for (auto& bullet : player.bullets) {
+			if (wall.active && SDL_HasIntersection(&bullet.rect, &wall.rect)) {
 				wall.active = false;
 				bullet.active = false;
 			}
 		}
-		for (auto& enemy : enemies)
-		{
-			for (auto& bullet : enemy.bullets)
-			{
-				if (wall.active && SDL_HasIntersection(&bullet.rect, &wall.rect))
-				{
+		for (auto& enemy : enemies) {
+			for (auto& bullet : enemy.bullets) {
+				if (wall.active && SDL_HasIntersection(&bullet.rect, &wall.rect)) {
 					wall.active = false;
 					bullet.active = false;
 				}
 			}
 		}
-		for (auto& enemy : enemies)
-		{
-			for (auto& bullet : player.bullets)
-			{
-				if (bullet.active && SDL_HasIntersection(&bullet.rect, &enemy.rect))
-				{
-					bullet.active = false; // Xóa đạn
-					enemy.active = false; // Xóa enemy
-				}
+	}
+
+	// Xử lý va chạm giữa đạn người chơi và kẻ địch
+	for (auto& enemy : enemies) {
+		for (auto& bullet : player.bullets) {
+			if (bullet.active && SDL_HasIntersection(&bullet.rect, &enemy.rect)) {
+				bullet.active = false;
+				enemy.active = false;
 			}
 		}
-
 	}
 
-	enemies.erase(remove_if(enemies.begin(), enemies.end(), [](EnemyTank& e) {return !e.active; }), enemies.end());
+	// Xóa kẻ địch bị tiêu diệt
+	enemies.erase(remove_if(enemies.begin(), enemies.end(), [](EnemyTank& e) { return !e.active; }), enemies.end());
 	if (enemies.empty()) {
-		isRunning = false;
+		isWin = true;  // Đánh dấu người chơi đã thắng
+		gameOverTime = SDL_GetTicks();
+		return;
 	}
-	for (auto& enemy : enemies)
-	{
-		for (auto& bullet : enemy.bullets)
-		{
+
+	// Kiểm tra va chạm giữa đạn kẻ địch và người chơi
+	for (auto& enemy : enemies) {
+		for (auto& bullet : enemy.bullets) {
 			if (SDL_HasIntersection(&bullet.rect, &player.rect)) {
-				isRunning = false;
-				return;
+				gameOver = true; // Đặt trạng thái game over
+				gameOverTime = SDL_GetTicks();
+				return; // Thoát để render xử lý
 			}
 		}
 	}
@@ -187,6 +182,22 @@ void Game::render()
 	{
 		enemy.render(renderer);
 	}
+	
+	// Nếu gameOver, hiển thị "GAME OVER" và đợi 2 giây trước khi thoát
+	if (gameOver) {
+		renderGameOver("GAME OVER");
+		SDL_Delay(3000); // Đợi 3 giây
+		isRunning = false;
+		return;
+	}
+	if (isWin) {
+		renderGameOver("YOU WIN!");
+		SDL_Delay(3000);
+		isRunning = false;
+		return;
+	}
+
+
 	SDL_RenderPresent(renderer);
 }
 void Game::clean()
@@ -221,22 +232,6 @@ void Game::showMenu() {
 		renderMenu(); // Cập nhật hiển thị menu
 	}
 }
-//void Game::renderMenu() {
-//	// Hiển thị background
-//	TextureManager::Instance()->draw("menu_bg", 0, 0, width, height, renderer);
-//
-//	//// Hiển thị nút Play
-//	//TextureManager::Instance()->draw("button_play", 300, 250, 128, 64, renderer);
-//
-//	//// Hiển thị nút Quit
-//	//TextureManager::Instance()->draw("button_quit", 300, 350, 128, 64, renderer);
-//
-//	//SDL_RenderPresent(renderer);
-//	// Hiển thị button PLAY
-//	
-//
-//}
-
 void Game::renderMenu() {
 	SDL_RenderClear(renderer);
 	// Hiển thị background
@@ -275,6 +270,9 @@ void Game::renderText(SDL_Renderer* renderer, const std::string& text, int y) {
 	TTF_Font* font = TTF_OpenFont("D:/VISUAL STUDIO/BTLgame/Assets/game.ttf", 95);
 	if (!font) {
 		std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Màu đỏ để báo lỗi
+		SDL_RenderClear(renderer);
+		SDL_RenderPresent(renderer);
 		return;
 	}
 
@@ -307,3 +305,9 @@ void Game::renderText(SDL_Renderer* renderer, const std::string& text, int y) {
 	TTF_CloseFont(font);
 }
 
+void Game::renderGameOver(const std::string& message) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	renderText(renderer, message, height / 2 - 50);
+	SDL_RenderPresent(renderer);
+}
