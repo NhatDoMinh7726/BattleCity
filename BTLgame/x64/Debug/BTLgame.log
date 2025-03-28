@@ -1,2 +1,5 @@
-﻿  Game.cpp
+﻿  BattleCIty.cpp
+  EnemyTank.cpp
+  Game.cpp
+  Generating Code...
   BTLgame.vcxproj -> D:\VISUAL STUDIO\BTLgame\x64\Debug\BTLgame.exe

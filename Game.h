@@ -39,29 +39,6 @@ public:
 	Tank player = Tank(6 * tile_size, 6 * tile_size, renderer);
 	int enemyNumber = 3;
 	vector<EnemyTank> enemies;
-	/*void spawnEnemies() {
-		enemies.clear();
-		for (int i = 0; i < enemyNumber; ++i)
-		{
-			int ex, ey;
-			bool validPosition = false;
-			while (!validPosition)
-			{
-				ex = (rand() % (map_width - 2) + 1) * tile_size;
-				ey = (rand() % (map_height - 2) + 1) * tile_size;
-				validPosition = true;
-				for (const auto& wall : walls)
-				{
-					if (wall.active && wall.x == ex && wall.y == ey)
-					{
-						validPosition = false;
-						break;
-					}
-				}
-			}
-			enemies.push_back(EnemyTank(ex, ey));
-		}
-	}*/
 
 	void spawnEnemies() {
 		enemies.clear();
@@ -79,7 +56,7 @@ public:
 					}
 				}
 			}
-			enemies.push_back(EnemyTank(ex, ey));
+			enemies.push_back(EnemyTank(ex, ey,renderer));
 		}
 	}
 	GameState getGameState() { return gameState; } // ✅ Thêm hàm getter
