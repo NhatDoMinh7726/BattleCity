@@ -91,16 +91,6 @@ public:
 		SDL_FreeSurface(surface);
 		return texture;
 	}
-	//void updateSprite() {
-	//	srcRect.y = 0; // Vì ảnh của bạn nằm trên 1 hàng
-
-	//	switch (direction) {
-	//	case 0: srcRect.x = 0; break;      // Lên
-	//	case 1: srcRect.x = 64; break;     // Phải
-	//	case 2: srcRect.x = 128; break;    // Xuống
-	//	case 3: srcRect.x = 192; break;    // Trái
-	//	}
-	//}
 	void updateSprite() {
 		switch (direction) {
 		case UP:
