@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "EnemyTank.h"
 #include "SDL_mixer.h"
+#include "SDL_ttf.h"
 using namespace std;
 enum GameState { GAME_MENU, GAME_RUNNING, GAME_PAUSED, GAME_OVER };
 class Game {
@@ -21,6 +22,7 @@ public:
 	void clean();
 	void renderMenu();
 	void handleMenuEvents(SDL_Event& event);
+	void renderText(SDL_Renderer* renderer, const std::string& text,  int x);
 	bool running() {
 		return isRunning;
 	}
@@ -37,7 +39,7 @@ public:
 		}
 	}
 	Tank player = Tank(6 * tile_size, 6 * tile_size, renderer);
-	int enemyNumber = 5;
+	int enemyNumber = 8;
 	vector<EnemyTank> enemies;
 
 	void spawnEnemies() {

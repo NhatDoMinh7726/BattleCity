@@ -2,6 +2,7 @@
 #include "Wall.h"
 #include "Tank.h"
 #include "TextureManager.h"
+#include "SDL_ttf.h"
 using namespace std;
 Game::Game() : window(nullptr), renderer(nullptr), isRunning(false), isMenu(true), backgroundMusic(nullptr) {}  // dấu hai chấm : là toán tử phạm vi dùng để xác định hàm Game() thuộc lớp Game.
 Game::~Game() {} // đây là hàm hủy , ~ là toán tử hủy , dùng để giải phóng tài nguyên , tránh rò rỉ bộ nhớ.
@@ -10,6 +11,11 @@ Game::~Game() {} // đây là hàm hủy , ~ là toán tử hủy , dùng để 
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
+	if (TTF_Init() == -1) {
+		std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+		isRunning = false;
+		return;
+	}
 	int flags = 0;
 	if (fullscreen)
 	{
@@ -73,7 +79,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			cout << "Background music playing!" << endl;
 		}
 	}
-
+	
 }
 void Game::handleEvents()
 {
@@ -192,6 +198,7 @@ void Game::clean()
 	SDL_DestroyTexture(bulletTexture);
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	TTF_Quit();
 	SDL_Quit();
 	cout << "Game cleaned!" << endl;
 }
@@ -232,7 +239,6 @@ void Game::showMenu() {
 
 void Game::renderMenu() {
 	SDL_RenderClear(renderer);
-
 	// Hiển thị background
 	TextureManager::Instance()->draw("menu_bg", 0, 0, width, height, renderer);
 
@@ -244,13 +250,14 @@ void Game::renderMenu() {
 		srcRectPlay.x, srcRectPlay.y, srcRectPlay.w, srcRectPlay.h,
 		destRectPlay.x, destRectPlay.y, destRectPlay.w, destRectPlay.h,
 		renderer);
-
+	renderText(renderer, "Battle City", 50);
+	renderText(renderer, "DO MINH NHAT I-IT6", 150);
 	SDL_RenderPresent(renderer);
 }
 void Game::handleMenuEvents(SDL_Event& event) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		int mouseX = event.button.x;
-		int mouseY = event.button.y;
+		int mouseY = event.button.y;	
 
 		// Kích thước vùng click khớp với kích thước hiển thị của button Play
 		SDL_Rect playButtonDest = { (width - 213) / 2, 250, 213, 42 };  // Căn giữa theo chiều ngang
@@ -263,3 +270,40 @@ void Game::handleMenuEvents(SDL_Event& event) {
 		}
 	}
 }
+
+void Game::renderText(SDL_Renderer* renderer, const std::string& text, int y) {
+	TTF_Font* font = TTF_OpenFont("D:/VISUAL STUDIO/BTLgame/Assets/game.ttf", 95);
+	if (!font) {
+		std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+		return;
+	}
+
+	SDL_Color textColor = { 255, 255, 255, 255 };
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+	if (!textSurface) {
+		std::cerr << "Failed to create text surface: " << TTF_GetError() << std::endl;
+		TTF_CloseFont(font);
+		return;
+	}
+
+	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	if (!textTexture) {
+		std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+		SDL_FreeSurface(textSurface);
+		TTF_CloseFont(font);
+		return;
+	}
+
+	// Lấy kích thước thực của chữ
+	int textWidth = textSurface->w;
+	int textHeight = textSurface->h;
+
+	// Căn giữa theo chiều ngang
+	SDL_Rect textRect = { (width - textWidth) / 2, y, textWidth, textHeight };
+	SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+	SDL_FreeSurface(textSurface);
+	SDL_DestroyTexture(textTexture);
+	TTF_CloseFont(font);
+}
+
